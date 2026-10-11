@@ -106,7 +106,7 @@ section,header{position:relative}
 /* ============ SCENE 3 ============ */
 .panel{height:112vh;min-height:620px;overflow-x:clip}
 .panel .gw{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);margin:0;white-space:nowrap;line-height:.9;z-index:1}
-.panel .tg{position:absolute;z-index:6;left:4.5vw;bottom:9vh;margin:0;font-family:var(--disp);font-size:clamp(22px,3.6vw,68px);line-height:1;text-transform:uppercase;padding:.28em .5em .22em;transform:rotate(-3deg);border-radius:.4em;box-shadow:0 .5vw 0 rgba(0,0,0,.28)}
+.panel .tg{position:absolute;z-index:6;left:4.5vw;bottom:calc(clamp(40px,8vw,130px) + 3vh);margin:0;font-family:var(--disp);font-size:clamp(22px,3.6vw,68px);line-height:1;text-transform:uppercase;padding:.28em .5em .22em;transform:rotate(-3deg);border-radius:.4em;box-shadow:0 .5vw 0 rgba(0,0,0,.28)}
 .panel .pi{position:absolute;z-index:6;right:4vw;top:5vh;font-family:var(--disp);font-size:clamp(14px,1.5vw,28px);letter-spacing:.14em}
 .p1{background:radial-gradient(90% 90% at 30% 20%,#e6ff7a,#b6ff1a 45%,#52b800);--seam:#b6ff1a}
 .p1 .gw{font-size:19vw;color:transparent;-webkit-text-stroke:.35vw #4a0e8f}
@@ -116,7 +116,7 @@ section,header{position:relative}
 .p2 .tg{background:var(--yellow);color:var(--ink)}
 .p3{background:radial-gradient(80% 80% at 50% 50%,#ff9ad0,#ff2d95 55%,#b0007a);--seam:#ff2d95}
 .p3 .gw{font-size:18.5vw;color:#fff;--ex:#4a0e8f;text-shadow:var(--ext)}
-.p3 .tg{background:#fff;color:#b0007a}
+.p3 .tg{background:#fff;color:#b0007a;font-size:clamp(18px,2.9vw,56px);white-space:nowrap}
 .p4{background:radial-gradient(80% 80% at 50% 60%,#8d4dff,#4d14b8 50%,#1c0545);--seam:#4d14b8}
 .p4 .gw{font-size:11.3vw;color:transparent;-webkit-text-stroke:.28vw #fff}
 .p4 .tg{background:var(--lime);color:var(--ink)}
@@ -154,6 +154,7 @@ section,header{position:relative}
 .conf i{position:absolute;top:-6vh;width:var(--s);height:calc(var(--s)*.5);background:var(--c);border-radius:20%;animation:fall var(--t) linear var(--d) infinite}
 @keyframes fall{to{transform:translate3d(var(--dx),115vh,0) rotate(720deg)}}
 
+.guide{position:fixed;inset:0;z-index:30;pointer-events:none;overflow:hidden}
 /* ============ REDUCED MOTION ============ */
 @media (prefers-reduced-motion:reduce){
   .f,.rays,.badge svg,.cue,.tk,.wm span,.conf i,.hero .c,.hero .mk,.hl .ln>span,.fini{animation:none!important}
@@ -226,7 +227,7 @@ noscript{display:none}
   <div class="sheen"></div>
   <h2 class="gw disp">URSINHOS</h2>
   <div class="layer" data-panel="bears"></div>
-  <p class="tg">Pequenos. Mordida grande.</p>
+  <p class="tg">Pequenos no tamanho. Gigantes na diversão.</p>
   <span class="pi" style="color:#fff">03 / 04</span>
 </section>
 
@@ -260,6 +261,7 @@ noscript{display:none}
   </div>
 </section>
 
+<div class="guide" id="guide" aria-hidden="true"></div>
 <script>
 (()=>{
 'use strict';
@@ -456,6 +458,11 @@ $$('.drip path').forEach((p,k)=>{let d='M0 120V60',x=0,i=k*7+3;
   while(x<1440){const w=90+((i*37)%70),h=8+((i*53)%52);d+='Q'+(x+w/2)+' '+(60-h*1.6)+' '+(x+w)+' '+(60+((i*29)%20)-10);x+=w;i++}
   p.setAttribute('d',d+'V120z')});
 
+/* condutores: um doce atravessa a tela em cada emenda de cena, já na cor da próxima */
+const seams=[['s2',{t:'worm',a:[K.lime,'#2aa000',0],w:34,y:46,r:-8}],['p1',{t:'worm',a:[K.purple,'#2a0a6b',1],w:36,y:52,r:6}],['p2',{t:'tube',a:[K.yellow,K.pink],w:7,y:50,r:70}],['p3',{t:'bear',a:[K.yellow],w:13,y:50,r:-12}],['p4',{t:'mallow',a:['#ffd0ea',true],w:14,y:52,r:20}],['s4',{t:'wrap',a:[K.lime,K.pink],w:16,y:48,r:-10}]]
+  .map(([id,sp],i)=>({el:document.getElementById(id),dir:i%2?-1:1,sp,c:fill($('#guide'),[{...sp,x:0,y:sp.y,d:0,fd:6}])[0]}));
+seams.forEach(g=>{g.c.querySelector('.f').style.animation='none'});
+
 /* ============ LOOP ============ */
 let mx=0,my=0,tx=0,ty=0,vw=innerWidth,vh=innerHeight;
 addEventListener('resize',()=>{vw=innerWidth;vh=innerHeight});
@@ -501,6 +508,12 @@ function frame(){
       else if(key==='mallows'){Y=k*d*vh*.95;R=k*d*45}                             // caem em câmera lenta
       e._p.style.transform=`translate3d(${X}px,${Y}px,0) rotate(${R}deg) scale(${S})`});
   });
+
+  /* condutores */
+  seams.forEach(g=>{const top=g.el.getBoundingClientRect().top, u=clamp((vh*1.25-top)/(vh*1.6));
+    const x=g.dir>0?lerp(-22,122,u):lerp(122,-22,u);
+    g.c.style.top=g.sp.y+'%';g.c._p.style.transform=`translate3d(${x/100*vw}px,0,0) rotate(${u*240*g.dir}deg)`;
+    g.c.style.visibility=(u<=0||u>=1)?'hidden':'visible'});
 
   /* cena 4 */
   const p4=prog(s4);
