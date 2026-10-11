@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fini — Candy World (conceito)</title>
+<meta name="description" content="Conceito criativo independente em homenagem à Fini. Não é um site oficial.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --pink:#ff2d95; --hot:#ff5fb0; --purple:#7b2ff7; --deep:#2a0a6b; --ink:#1c0545;
+  --yellow:#ffe600; --lime:#b6ff1a; --cyan:#36e2ff; --orange:#ff8a00;
+  --ex:#3a0a8c;
+  --ext: 0 .025em 0 var(--ex),0 .05em 0 var(--ex),0 .075em 0 var(--ex),0 .1em 0 var(--ex),0 .125em 0 var(--ex),0 .15em 0 var(--ex),0 .22em .22em rgba(20,0,60,.45);
+  --disp:'Bagel Fat One','Arial Black',Impact,sans-serif;
+  --body:'Fredoka','Trebuchet MS',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--deep);scroll-behavior:auto}
+body{margin:0;font-family:var(--body);color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.disp{font-family:var(--disp);font-weight:400;letter-spacing:-.01em;text-transform:uppercase}
+section,header{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.layer{position:absolute;inset:0;pointer-events:none}
+
+/* ============ CANDY RIG ============ */
+.c{position:absolute;width:0;height:0}
+.p{position:absolute;left:0;top:0;width:0;height:0;will-change:transform}
+.f{position:absolute;left:0;top:0;width:0;height:0;animation:bob var(--fd,6s) ease-in-out var(--fl,0s) infinite}
+.sv{position:absolute;left:0;top:0;width:calc(var(--w)*1vmax);transform:translate(-50%,-50%) rotate(var(--r,0deg))}
+.sv>svg{display:block;width:100%;height:auto;overflow:visible;filter:drop-shadow(0 .7vmax .8vmax rgba(35,0,80,.38))}
+.sv.ph{aspect-ratio:1;border-radius:50%;background-size:cover;background-position:center;border:max(.5vmax,5px) solid #fff;box-shadow:0 1.2vmax 2.4vmax rgba(35,0,80,.45)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(calc(var(--fa,8deg)*-1))}50%{transform:translateY(-1.8vmax) rotate(var(--fa,8deg))}}
+@media (max-aspect-ratio:1/1){.sv{width:calc(var(--w)*.62vmax)}}
+
+/* worm draw-in */
+.mk{stroke-dasharray:1;stroke-dashoffset:0}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+
+/* hero entry */
+.hero .c{animation:fly 1.25s cubic-bezier(.17,1.25,.3,1) calc(.15s + var(--i,0)*.055s) backwards}
+@keyframes fly{from{transform:translate(var(--fx,0),var(--fy,0)) scale(.15)}to{transform:none}}
+.hero .mk{animation:draw 1.5s .35s cubic-bezier(.6,0,.2,1) backwards}
+
+/* panel entry (class .in set by JS) */
+.panel .c{opacity:0}
+.panel.in .c{animation:pop .95s cubic-bezier(.2,1.3,.35,1) calc(var(--i,0)*.07s) both}
+.panel.in .mk{animation:draw 1.5s calc(var(--i,0)*.07s + .15s) cubic-bezier(.6,0,.2,1) backwards}
+@keyframes pop{from{opacity:0;transform:translateY(34vh) scale(.25) rotate(-35deg)}to{opacity:1;transform:none}}
+
+/* ============ HERO ============ */
+.hero{height:190vh}
+.hero .stage{background:radial-gradient(120% 95% at 72% 38%,#ff6fba 0%,#ff2d95 26%,#b01ed8 58%,#3a0a8c 100%)}
+.rays{position:absolute;left:58%;top:46%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;background:repeating-conic-gradient(rgba(255,255,255,.17) 0 5deg,transparent 5deg 12deg);-webkit-mask:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 14%,transparent 40%);mask:radial-gradient(circle,#000 0,rgba(0,0,0,.6) 14%,transparent 40%);animation:spin 80s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.75}
+.b1{width:46vmax;height:46vmax;left:-12vmax;bottom:-16vmax;background:#ffe600;opacity:.5}
+.b2{width:40vmax;height:40vmax;right:-10vmax;top:-14vmax;background:#7b2ff7}
+.bigword{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-6deg);font-size:46vw;line-height:1;color:transparent;-webkit-text-stroke:.18vw rgba(255,255,255,.22);white-space:nowrap}
+.hl{position:absolute;z-index:5;left:4.5vw;top:50%;margin:0;transform:translateY(-52%);font-size:clamp(40px,8.1vw,170px);line-height:.9;color:#fff;text-shadow:var(--ext)}
+.hl .ln{display:block;white-space:nowrap}
+.hl .ln>span{display:inline-block;animation:rise .9s cubic-bezier(.2,1.1,.3,1) backwards}
+.hl .ln:nth-child(1)>span{animation-delay:.35s}
+.hl .ln:nth-child(2)>span{animation-delay:.5s}
+.hl .l3 .t{animation-delay:.65s}
+@keyframes rise{from{transform:translateY(70%) rotate(5deg) scale(.9);opacity:0}to{transform:none;opacity:1}}
+.l3{display:flex!important;align-items:flex-end;gap:.25em}
+.fini{font-size:2.1em;line-height:.78;color:var(--yellow);--ex:#b0007a;transform:rotate(-5deg);transform-origin:left bottom;animation:finiPop 1.1s cubic-bezier(.2,1.5,.3,1) .85s backwards!important}
+@keyframes finiPop{from{transform:scale(.2) rotate(-40deg);opacity:0}to{transform:rotate(-5deg);opacity:1}}
+.badge{position:absolute;z-index:9;right:3.2vw;top:4vh;width:clamp(96px,11vw,190px);aspect-ratio:1}
+.badge svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 18s linear infinite}
+.badge text{font-family:var(--disp);fill:#fff;font-size:21px;letter-spacing:.04em}
+.badge img{position:absolute;left:22%;top:22%;width:56%;height:56%;border-radius:50%;object-fit:cover;border:.35vw solid #fff;background:var(--pink);box-shadow:0 .6vw 1.2vw rgba(0,0,0,.3)}
+.cue{position:absolute;z-index:9;left:50%;bottom:3.2vh;transform:translateX(-50%);font-family:var(--disp);font-size:clamp(14px,1.2vw,22px);letter-spacing:.2em;display:flex;flex-direction:column;align-items:center;gap:.4em;animation:cue 1.6s ease-in-out infinite;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+@keyframes cue{50%{transform:translate(-50%,10px)}}
+.cue i{width:.9em;height:.9em;border-right:.22em solid #fff;border-bottom:.22em solid #fff;transform:rotate(45deg)}
+
+/* wavy seams */
+.drip{position:absolute;left:0;top:0;width:100%;height:clamp(40px,8vw,130px);transform:translateY(-99%);fill:var(--seam,#fff);z-index:20;pointer-events:none}
+
+/* ============ SCENE 2 ============ */
+.s2{height:420vh}
+.bgl{position:absolute;inset:0}
+.bgl:nth-child(1){background:radial-gradient(100% 90% at 30% 30%,#ff7ac0,#ff2d95 45%,#a00a78)}
+.bgl:nth-child(2){background:radial-gradient(100% 90% at 70% 30%,#a566ff,#7b2ff7 45%,#2a0a6b)}
+.bgl:nth-child(3){background:radial-gradient(100% 90% at 30% 70%,#e2ff6a,#b6ff1a 45%,#3fa800)}
+.bgl:nth-child(4){background:radial-gradient(100% 90% at 70% 60%,#fff27a,#ffe600 40%,#ff8a00)}
+.kick{position:absolute;z-index:6;left:4.5vw;top:6vh;margin:0;font-family:var(--disp);font-size:clamp(13px,1.3vw,24px);letter-spacing:.18em;text-shadow:0 .1em 0 rgba(40,0,90,.5)}
+.s2t{position:absolute;z-index:5;left:50%;top:44%;transform:translate(-50%,-50%);margin:0;text-align:center;font-size:clamp(32px,8.3vw,170px);line-height:.95;width:96vw}
+.s2t .w{display:inline-block;margin:0 .08em;color:transparent;-webkit-text-stroke:max(2px,.18vw) rgba(255,255,255,.7);transition:transform .45s cubic-bezier(.2,1.6,.3,1),color .25s;transform:scale(.94)}
+.s2t .w.on{color:#fff;-webkit-text-stroke:0;transform:scale(1);text-shadow:var(--ext)}
+.s2t .row{display:block;white-space:nowrap}
+.tick{position:absolute;z-index:7;left:-4vw;right:-4vw;bottom:7vh;transform:rotate(-4deg);background:var(--ink);overflow:hidden;border-top:.5vh solid #fff;border-bottom:.5vh solid #fff;box-shadow:0 1vh 3vh rgba(0,0,0,.35)}
+.tk{display:flex;width:max-content;animation:tk 26s linear infinite}
+.tk span{font-family:var(--disp);font-size:clamp(20px,3.2vw,60px);padding:.3em .5em;color:var(--yellow);white-space:nowrap;text-transform:uppercase}
+.tk span:nth-child(even){color:#fff}
+@keyframes tk{to{transform:translateX(-50%)}}
+
+/* ============ SCENE 3 ============ */
+.panel{height:112vh;min-height:620px;overflow:hidden}
+.panel .gw{position:absolute;left:50%;top:50%;transform:translate(-50%,-52%);margin:0;white-space:nowrap;line-height:.9;z-index:1}
+.panel .tg{position:absolute;z-index:6;left:4.5vw;bottom:9vh;margin:0;font-family:var(--disp);font-size:clamp(22px,3.6vw,68px);line-height:1;text-transform:uppercase;padding:.28em .5em .22em;transform:rotate(-3deg);border-radius:.4em;box-shadow:0 .5vw 0 rgba(0,0,0,.28)}
+.panel .pi{position:absolute;z-index:6;right:4vw;top:5vh;font-family:var(--disp);font-size:clamp(14px,1.5vw,28px);letter-spacing:.14em}
+.p1{background:radial-gradient(90% 90% at 30% 20%,#e6ff7a,#b6ff1a 45%,#52b800);--seam:#b6ff1a}
+.p1 .gw{font-size:19vw;color:transparent;-webkit-text-stroke:.35vw #4a0e8f}
+.p1 .tg{background:#4a0e8f;color:var(--yellow)} .p1 .pi{color:#4a0e8f}
+.p2{background:radial-gradient(90% 90% at 50% 100%,#a566ff,#6a1bd6 45%,#2a0a6b);--seam:#6a1bd6}
+.p2 .gw{font-size:30vw;color:var(--yellow);text-shadow:0 .03em 0 #b0007a,0 .06em 0 #b0007a,0 .09em 0 #b0007a,0 .12em 0 #b0007a,0 .2em .2em rgba(0,0,0,.4);top:34%}
+.p2 .tg{background:var(--yellow);color:var(--ink)}
+.p3{background:radial-gradient(80% 80% at 50% 50%,#ff9ad0,#ff2d95 55%,#b0007a);--seam:#ff2d95}
+.p3 .gw{font-size:18.5vw;color:#fff;--ex:#4a0e8f;text-shadow:var(--ext)}
+.p3 .tg{background:#fff;color:#b0007a}
+.p4{background:radial-gradient(80% 80% at 50% 60%,#8d4dff,#4d14b8 50%,#1c0545);--seam:#4d14b8}
+.p4 .gw{font-size:11.3vw;color:transparent;-webkit-text-stroke:.28vw #fff}
+.p4 .tg{background:var(--lime);color:var(--ink)}
+.panel .sheen{position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 3vw,transparent 3vw 8vw);z-index:0}
+
+/* ============ SCENE 4 ============ */
+.s4{height:480vh}
+.s4 .stage{background:radial-gradient(90% 90% at 50% 50%,#4d14b8,#1c0545 70%)}
+.s4 .bgf{position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 50%,#ff5fb0,#ff2d95 40%,#7b0a8f 100%);opacity:0}
+.s4 .rays{opacity:0;left:50%;top:50%}
+.s4t{position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);margin:0;text-align:center;font-size:clamp(34px,9vw,180px);line-height:.92;width:94vw}
+.s4t .w{display:block;opacity:0;transform:translateY(40%) scale(.8);transition:opacity .3s,transform .5s cubic-bezier(.2,1.6,.3,1);text-shadow:var(--ext)}
+.s4t .w.on{opacity:1;transform:none}
+.s4t .w.big{color:var(--yellow);--ex:#b0007a;font-size:1.35em}
+.flash{position:absolute;inset:0;z-index:12;background:#fff;opacity:0;pointer-events:none}
+.final{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.final>*{opacity:0}
+.final.show .wm{animation:wm 1.2s cubic-bezier(.2,1.6,.3,1) both}
+.final.show .pd{animation:rise .9s cubic-bezier(.2,1.2,.3,1) .45s both}
+.final.show .lg{animation:wm 1s cubic-bezier(.2,1.6,.3,1) .2s both}
+.final.show .legal{animation:rise .9s 1.1s both}
+@keyframes wm{from{opacity:0;transform:scale(.2) rotate(-20deg)}to{opacity:1;transform:none}}
+.wm{margin:0;font-size:clamp(90px,26vw,520px);line-height:.8;color:var(--yellow);--ex:#b0007a;text-shadow:var(--ext)}
+.wm span{display:inline-block;animation:jig 2.4s ease-in-out infinite}
+.wm span:nth-child(2){animation-delay:.2s;color:#fff}
+.wm span:nth-child(3){animation-delay:.4s;color:var(--lime)}
+.wm span:nth-child(4){animation-delay:.6s;color:var(--cyan)}
+.wm span:nth-child(5){animation-delay:.8s;color:var(--yellow)}
+@keyframes jig{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-.06em) rotate(3deg)}}
+.pd{margin:.5vh 0 0;font-size:clamp(24px,5.2vw,100px);color:#fff;text-shadow:var(--ext);--ex:#3a0a8c}
+.lg{width:clamp(70px,8vw,140px);aspect-ratio:1;border-radius:50%;object-fit:cover;border:.4vw solid #fff;margin-top:3vh;box-shadow:0 1vw 2vw rgba(0,0,0,.35)}
+.legal{position:absolute;bottom:2.6vh;left:0;right:0;margin:0;font-size:clamp(10px,.9vw,15px);letter-spacing:.06em;opacity:.8;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.conf{position:absolute;inset:0;z-index:9;overflow:hidden;pointer-events:none;opacity:0;transition:opacity .4s}
+.final.show~.conf,.conf.show{opacity:1}
+.conf i{position:absolute;top:-6vh;width:var(--s);height:calc(var(--s)*.5);background:var(--c);border-radius:20%;animation:fall var(--t) linear var(--d) infinite}
+@keyframes fall{to{transform:translate3d(var(--dx),115vh,0) rotate(720deg)}}
+
+/* ============ REDUCED MOTION ============ */
+@media (prefers-reduced-motion:reduce){
+  .f,.rays,.badge svg,.cue,.tk,.wm span,.conf i,.hero .c,.hero .mk,.hl .ln>span,.fini{animation:none!important}
+  .panel .c{opacity:1}
+  .panel.in .c,.panel.in .mk{animation:none!important}
+}
+noscript{display:none}
+</style>
+</head>
+<body>
+
+<!-- ============ CENA 1 — THE CANDY EXPLOSION ============ -->
+<header class="hero" id="hero">
+  <div class="stage">
+    <div class="layer"><div class="rays"></div><i class="blob b1"></i><i class="blob b2"></i><div class="bigword disp">FINI</div></div>
+    <div class="layer" id="heroBack"></div>
+    <h1 class="hl disp">
+      <span class="ln"><span>O MUNDO FICA</span></span>
+      <span class="ln"><span>MAIS DIVERTIDO</span></span>
+      <span class="ln l3"><span class="t">QUANDO É</span><span class="fini">FINI.</span></span>
+    </h1>
+    <div class="layer" id="heroFront"></div>
+    <div class="badge" aria-hidden="true">
+      <svg viewBox="0 0 200 200"><defs><path id="cp" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs>
+        <text><textPath href="#cp" textLength="470" lengthAdjust="spacing">FINI • PURA DIVERSÃO • FINI • PURA DIVERSÃO •</textPath></text></svg>
+      <img src="assets/logo.jpg" alt="" onerror="this.style.display='none'">
+    </div>
+    <div class="cue" aria-hidden="true">ROLE<i></i></div>
+  </div>
+</header>
+
+<!-- ============ CENA 2 — UM UNIVERSO DE SABORES ============ -->
+<section class="s2" id="s2" style="--seam:#ff2d95">
+  <svg class="drip" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path/></svg>
+  <div class="stage">
+    <i class="bgl"></i><i class="bgl" style="opacity:0"></i><i class="bgl" style="opacity:0"></i><i class="bgl" style="opacity:0"></i>
+    <div class="layer" id="s2Back"></div>
+    <p class="kick">02 — UM UNIVERSO DE SABORES</p>
+    <h2 class="s2t disp">
+      <span class="row"><span class="w">PEQUENOS</span> <span class="w">DOCES.</span></span>
+      <span class="row"><span class="w">GRANDES</span> <span class="w">MOMENTOS.</span></span>
+    </h2>
+    <div class="layer" id="s2Front" style="z-index:8"></div>
+    <div class="tick" aria-hidden="true"><div class="tk" id="tk"></div></div>
+  </div>
+</section>
+
+<!-- ============ CENA 3 — OS PROTAGONISTAS ============ -->
+<section class="panel p1" id="p1">
+  <svg class="drip" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path/></svg>
+  <div class="sheen"></div>
+  <h2 class="gw disp">MINHOCAS</h2>
+  <div class="layer" data-panel="worms"></div>
+  <p class="tg">Estica. Enrola. Devora.</p>
+  <span class="pi">01 / 04</span>
+</section>
+
+<section class="panel p2" id="p2">
+  <svg class="drip" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path/></svg>
+  <div class="sheen"></div>
+  <h2 class="gw disp">TUBES</h2>
+  <div class="layer" data-panel="tubes"></div>
+  <p class="tg">Cada tubo, uma explosão.</p>
+  <span class="pi" style="color:var(--yellow)">02 / 04</span>
+</section>
+
+<section class="panel p3" id="p3">
+  <svg class="drip" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path/></svg>
+  <div class="sheen"></div>
+  <h2 class="gw disp">URSINHOS</h2>
+  <div class="layer" data-panel="bears"></div>
+  <p class="tg">Pequenos. Mordida grande.</p>
+  <span class="pi" style="color:#fff">03 / 04</span>
+</section>
+
+<section class="panel p4" id="p4">
+  <svg class="drip" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path/></svg>
+  <div class="sheen"></div>
+  <h2 class="gw disp">MARSHMALLOWS</h2>
+  <div class="layer" data-panel="mallows"></div>
+  <p class="tg">Fofura em alto volume.</p>
+  <span class="pi" style="color:#fff">04 / 04</span>
+</section>
+
+<!-- ============ CENA 4 — A EXPLOSÃO FINAL ============ -->
+<section class="s4" id="s4" style="--seam:#4d14b8">
+  <svg class="drip" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path/></svg>
+  <div class="stage">
+    <div class="bgf" id="s4bgf"></div>
+    <div class="layer"><div class="rays" id="s4rays"></div></div>
+    <div class="layer" id="s4c"></div>
+    <h2 class="s4t disp" id="s4t">
+      <span class="w">A VIDA</span><span class="w">PRECISA DE</span><span class="w">MAIS</span><span class="w big">DOÇURA.</span>
+    </h2>
+    <div class="flash" id="flash"></div>
+    <div class="final" id="final">
+      <h2 class="wm disp" aria-label="Fini."><span>F</span><span>I</span><span>N</span><span>I</span><span>.</span></h2>
+      <p class="pd disp">PURA DIVERSÃO.</p>
+      <img class="lg" src="assets/logo.jpg" alt="" onerror="this.style.display='none'">
+      <p class="legal">Conceito criativo independente por Connect Alpha · não é um site oficial da Fini</p>
+    </div>
+    <div class="conf" id="conf"></div>
+  </div>
+</section>
+
+<script>
+(()=>{
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const ease=t=>1-Math.pow(1-t,3);
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- cores ---------- */
+const K={pink:'#ff2d95',hot:'#ff5fb0',purple:'#7b2ff7',deep:'#4a0e8f',yellow:'#ffe600',lime:'#b6ff1a',orange:'#ff8a00',cyan:'#36e2ff',white:'#ffffff',red:'#ff2a3a',green:'#3fd400'};
+const mix=(h,to,t)=>{const x3=v=>v.length===4?'#'+[...v.slice(1)].map(ch=>ch+ch).join(''):v;h=x3(h);to=x3(to);const n=x=>parseInt(x,16),a=[1,3,5].map(i=>n(h.slice(i,i+2))),b=[1,3,5].map(i=>n(to.slice(i,i+2)));
+  return '#'+a.map((v,i)=>Math.round(lerp(v,b[i],t)).toString(16).padStart(2,'0')).join('')};
+const lt=(h,t=.45)=>mix(h,'#ffffff',t), dk=(h,t=.35)=>mix(h,'#4a1aa8',t);
+let uid=0;
+
+/* ---------- doces em SVG (feitos em código, sem depender de imagem) ---------- */
+const SVG={
+  worm(c,c2,v=0){const i=++uid,d=v?'M40 70C110 -5 150 190 230 125S340 25 385 135':'M40 160C80 30 140 30 175 110S265 200 305 100S365 50 385 90';
+    return `<svg viewBox="0 0 420 220"><defs><mask id="m${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="420" height="220"><path class="mk" pathLength="1" d="${d}" fill="none" stroke="#fff" stroke-width="80" stroke-linecap="round"/></mask></defs>
+    <g mask="url(#m${i})" fill="none" stroke-linecap="round">
+      <path d="${d}" stroke="${c2||dk(c)}" stroke-width="48"/>
+      <path d="${d}" stroke="${c}" stroke-width="36" transform="translate(0,-5)"/>
+      <path d="${d}" stroke="rgba(0,0,0,.13)" stroke-width="44" stroke-dasharray="3 15" transform="translate(0,-2)"/>
+      <path d="${d}" stroke="#fff" stroke-opacity=".6" stroke-width="7" stroke-dasharray="60 46" transform="translate(-4,-14)"/>
+    </g></svg>`},
+  bear(c){const i=++uid;
+    return `<svg viewBox="0 0 200 250"><defs><radialGradient id="b${i}" cx=".35" cy=".28" r=".85"><stop offset="0" stop-color="${lt(c,.55)}"/><stop offset=".5" stop-color="${c}"/><stop offset="1" stop-color="${dk(c,.4)}"/></radialGradient></defs>
+    <g fill="url(#b${i})"><circle cx="58" cy="40" r="21"/><circle cx="142" cy="40" r="21"/><ellipse cx="42" cy="140" rx="19" ry="34" transform="rotate(28 42 140)"/><ellipse cx="158" cy="140" rx="19" ry="34" transform="rotate(-28 158 140)"/><ellipse cx="68" cy="212" rx="26" ry="28"/><ellipse cx="132" cy="212" rx="26" ry="28"/><ellipse cx="100" cy="150" rx="54" ry="66"/><circle cx="100" cy="68" r="44"/></g>
+    <ellipse cx="100" cy="80" rx="19" ry="14" fill="${lt(c,.35)}" opacity=".85"/><ellipse cx="100" cy="75" rx="6" ry="4" fill="${dk(c,.6)}" opacity=".75"/>
+    <circle cx="84" cy="58" r="4" fill="${dk(c,.7)}" opacity=".7"/><circle cx="116" cy="58" r="4" fill="${dk(c,.7)}" opacity=".7"/>
+    <ellipse cx="78" cy="48" rx="14" ry="8" fill="#fff" opacity=".5" transform="rotate(-25 78 48)"/><ellipse cx="72" cy="140" rx="12" ry="30" fill="#fff" opacity=".35" transform="rotate(10 72 140)"/></svg>`},
+  mallow(c,stripe){const i=++uid,col=c||'#ffd0ea';
+    return `<svg viewBox="0 0 160 180"><defs><linearGradient id="g${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${lt(col,.35)}"/></linearGradient>
+    <pattern id="s${i}" width="44" height="44" patternUnits="userSpaceOnUse" patternTransform="rotate(32)"><rect width="22" height="44" fill="${col}"/><rect x="22" width="22" height="44" fill="#fff"/></pattern>
+    <radialGradient id="h${i}" cx=".3" cy=".25" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#6a1bd6" stop-opacity=".25"/></radialGradient></defs>
+    <rect x="18" y="26" width="124" height="130" rx="46" fill="url(#${stripe?'s':'g'}${i})"/><rect x="18" y="26" width="124" height="130" rx="46" fill="url(#h${i})"/>
+    <ellipse cx="80" cy="34" rx="30" ry="8" fill="rgba(80,20,120,.14)"/><ellipse cx="80" cy="148" rx="30" ry="8" fill="rgba(80,20,120,.14)"/>
+    <ellipse cx="46" cy="70" rx="9" ry="26" fill="#fff" opacity=".6"/></svg>`},
+  tube(c,c2){const i=++uid;
+    return `<svg viewBox="0 0 120 340"><defs><clipPath id="t${i}"><rect x="16" y="8" width="88" height="324" rx="44"/></clipPath>
+    <pattern id="p${i}" width="46" height="46" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><rect width="23" height="46" fill="${c}"/><rect x="23" width="23" height="46" fill="${c2}"/></pattern>
+    <linearGradient id="l${i}" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".32"/><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".65" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".36"/></linearGradient></defs>
+    <g clip-path="url(#t${i})"><rect x="0" y="0" width="120" height="340" fill="url(#p${i})"/><rect x="0" y="0" width="120" height="340" fill="url(#l${i})"/></g>
+    <rect x="34" y="34" width="11" height="270" rx="5.5" fill="#fff" opacity=".55"/>
+    <rect x="16" y="40" width="88" height="6" rx="3" fill="rgba(0,0,0,.18)"/><rect x="16" y="294" width="88" height="6" rx="3" fill="rgba(0,0,0,.18)"/></svg>`},
+  ring(c){const i=++uid;
+    return `<svg viewBox="0 0 200 200"><g fill="none"><circle cx="100" cy="100" r="62" stroke="${dk(c,.3)}" stroke-width="52"/><circle cx="100" cy="100" r="62" stroke="${c}" stroke-width="42" transform="translate(0,-3)"/>
+    <circle cx="100" cy="100" r="62" stroke="#fff" stroke-opacity=".75" stroke-width="38" stroke-dasharray="1.2 7" stroke-linecap="round"/>
+    <path d="M52 78A56 56 0 0 1 96 44" stroke="#fff" stroke-opacity=".7" stroke-width="8" stroke-linecap="round"/></g></svg>`},
+  wrap(c,c2){const i=++uid;
+    return `<svg viewBox="0 0 250 130"><defs><pattern id="w${i}" width="36" height="36" patternUnits="userSpaceOnUse" patternTransform="rotate(60)"><rect width="18" height="36" fill="${c}"/><rect x="18" width="18" height="36" fill="${c2}"/></pattern>
+    <radialGradient id="r${i}" cx=".35" cy=".25" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></radialGradient></defs>
+    <path d="M52 65L2 14V116z" fill="${c2}"/><path d="M198 65L248 14V116z" fill="${c2}"/><path d="M52 65L2 14M52 65L2 116M198 65L248 14M198 65L248 116" stroke="#fff" stroke-opacity=".5" stroke-width="3"/>
+    <ellipse cx="125" cy="65" rx="76" ry="50" fill="url(#w${i})"/><ellipse cx="125" cy="65" rx="76" ry="50" fill="url(#r${i})"/></svg>`}
+};
+
+/* ---------- fábrica ---------- */
+function candy(s,i=0){
+  const c=document.createElement('div');c.className='c';
+  c.style.left=s.x+'%';c.style.top=s.y+'%';c.style.setProperty('--i',i);
+  if(s.fx!=null){c.style.setProperty('--fx',s.fx+'vw');c.style.setProperty('--fy',s.fy+'vh')}
+  const blur=s.b?`filter:blur(${s.b}px);`:'';
+  let inner;
+  if(s.t==='photo') inner=`<div class="sv ph" style="--w:${s.w};--r:${s.r||0}deg;${blur}background-image:url(assets/${s.src})"></div>`;
+  else inner=`<div class="sv" style="--w:${s.w};--r:${s.r||0}deg;${blur}">${SVG[s.t](...(s.a||[]))}</div>`;
+  c.innerHTML=`<div class="p"><div class="f" style="--fd:${s.fd||rnd(5,8).toFixed(1)}s;--fl:${(-rnd(0,6)).toFixed(1)}s;--fa:${s.fa||rnd(4,10).toFixed(0)}deg">${inner}</div></div>`;
+  c._p=c.firstChild;c._d=s.d||1;c._s=s;
+  return c;
+}
+function fill(layer,list,off=0){return list.map((s,i)=>{const e=candy(s,i+off);layer.appendChild(e);return e})}
+const fx=(x,y)=>({fx:(x-50)*1.4,fy:(y-50)*1.4}); // voo de entrada: parte de fora, em direção à posição final
+
+/* ============ CENA 1 ============ */
+const heroBackList=[
+ {t:'worm',a:[K.pink,'#b0005f',0],x:62,y:10,w:24,r:8,d:.5},
+ {t:'bear',a:[K.lime],x:90,y:22,w:8.5,r:22,d:.6},
+ {t:'ring',a:[K.yellow],x:66,y:84,w:9,r:0,d:.55},
+ {t:'bear',a:[K.yellow],x:73,y:60,w:7,r:-14,d:.7},
+ {t:'wrap',a:[K.cyan,K.purple],x:38,y:7,w:11,r:-10,d:.45},
+ {t:'tube',a:[K.pink,'#fff'],x:5,y:42,w:5,r:-32,d:.8},
+ {t:'ring',a:[K.pink],x:21,y:92,w:8,d:.5}
+];
+const heroFrontList=[
+ {t:'worm',a:[K.lime,'#2aa000',1],x:25,y:84,w:30,r:-14,d:1.4},
+ {t:'worm',a:[K.yellow,K.orange,0],x:84,y:76,w:32,r:150,d:1.2},
+ {t:'bear',a:[K.orange],x:9,y:20,w:10.5,r:-24,d:1.7,b:1.5},
+ {t:'mallow',a:['#ff9ad0',true],x:76,y:14,w:10,r:32,d:1.1},
+ {t:'tube',a:[K.purple,K.yellow],x:95,y:50,w:6.5,r:26,d:1.3},
+ {t:'mallow',a:['#fff',false],x:49,y:95,w:11,r:-26,d:2.0,b:5},
+ {t:'bear',a:[K.pink],x:57,y:30,w:7.5,r:18,d:.9},
+ {t:'photo',src:'mix.jpg',x:92,y:90,w:15,r:0,d:1.5},
+ {t:'photo',src:'amoras.jpg',x:3,y:92,w:11,d:1.9,b:2}
+];
+const heroEls=[
+  ...fill($('#heroBack'),heroBackList.map(s=>({...s,...fx(s.x,s.y)})),0),
+  ...fill($('#heroFront'),heroFrontList.map(s=>({...s,...fx(s.x,s.y)})),7)
+];
+
+/* ============ CENA 2 ============ */
+const tk=$('#tk');
+const flavors=['MORANGO','UVA','LIMÃO','MAÇÃ VERDE','TUTTI-FRUTTI','LARANJA','CEREJA','MELANCIA','FRAMBOESA','ABACAXI'];
+const strip=flavors.map(f=>`<span>${f}</span><span>✦</span>`).join('');
+tk.innerHTML=strip+strip;
+
+// cada doce atravessa a tela em uma janela do scroll [a,b]
+const s2Back=[
+ {t:'worm',a:[K.lime,'#2aa000',0],y:22,w:30,dir:1,a0:.02,b0:.45,r:-10,d:0},
+ {t:'photo',src:'amoras.jpg',y:70,w:17,dir:-1,a0:.05,b0:.5,r:0},
+ {t:'bear',a:[K.yellow],y:34,w:9,dir:1,a0:.18,b0:.6,r:20},
+ {t:'ring',a:[K.pink],y:78,w:10,dir:1,a0:.28,b0:.72},
+ {t:'tube',a:[K.cyan,K.purple],y:20,w:6,dir:-1,a0:.34,b0:.8,r:60},
+ {t:'photo',src:'tubos.jpg',y:62,w:19,dir:1,a0:.48,b0:.95},
+ {t:'worm',a:[K.pink,'#b0005f',1],y:30,w:34,dir:-1,a0:.52,b0:.98,r:12},
+ {t:'wrap',a:[K.yellow,K.orange],y:80,w:13,dir:-1,a0:.58,b0:1.05,r:-12}
+];
+const s2Front=[
+ {t:'mallow',a:['#fff',false],y:50,w:26,dir:1,a0:.22,b0:.4,r:-20,b:7},
+ {t:'bear',a:[K.red],y:44,w:30,dir:-1,a0:.62,b0:.82,r:12,b:8},
+ {t:'photo',src:'dentaduras.jpg',y:46,w:22,dir:1,a0:.78,b0:1.02,r:0,b:3}
+];
+const s2El=[...fill($('#s2Back'),s2Back),...fill($('#s2Front'),s2Front,10)];
+const s2Words=$$('.s2t .w');
+const s2Bgs=$$('#s2 .bgl');
+
+/* ============ CENA 3 ============ */
+const P={
+ worms:[
+  {t:'worm',a:[K.pink,'#b0005f',0],x:30,y:34,w:50,r:-8,sp:1.2},
+  {t:'worm',a:[K.purple,'#2a0a6b',1],x:74,y:62,w:52,r:8,sp:.7},
+  {t:'worm',a:[K.orange,'#c43a00',1],x:20,y:80,w:34,r:-18,sp:1.6},
+  {t:'worm',a:[K.yellow,'#ff9f00',0],x:88,y:20,w:30,r:16,sp:.9},
+  {t:'worm',a:['#ffffff','#ffc2e6',0],x:56,y:88,w:28,r:5,sp:1.4},
+  {t:'photo',src:'mix.jpg',x:50,y:20,w:16,sp:1.8}
+ ],
+ tubes:(()=>{const cols=[[K.pink,K.yellow],[K.lime,K.purple],[K.orange,'#fff'],[K.cyan,K.pink],[K.yellow,K.pink],[K.lime,K.cyan],['#fff',K.pink]];
+   const l=cols.map((c,i)=>{const a=(i-3)*17;return {t:'tube',a:c,x:50+(i-3)*11.5,y:70+Math.abs(i-3)*3.4,w:9,r:a,sp:.6+i%3*.5}});
+   l.push({t:'photo',src:'tubos.jpg',x:12,y:24,w:17,sp:1.6},{t:'ring',a:[K.lime],x:88,y:26,w:11,sp:1.3},{t:'ring',a:[K.pink],x:80,y:88,w:9,sp:.8},{t:'wrap',a:[K.cyan,K.pink],x:16,y:84,w:13,r:-18,sp:1.1});
+   return l})(),
+ bears:(()=>{const cols=[K.lime,K.yellow,K.orange,K.purple,'#fff',K.cyan,K.red,K.green];
+   const l=[{t:'bear',a:[K.yellow],x:50,y:54,w:24,r:-5,sp:.5}];
+   cols.forEach((c,i)=>{const a=i/cols.length*Math.PI*2+.3;l.push({t:'bear',a:[c],x:50+Math.cos(a)*38,y:54+Math.sin(a)*36,w:9+i%3*2,r:rnd(-30,30),sp:.7+i%4*.35})});
+   l.push({t:'photo',src:'coracoes.jpg',x:88,y:16,w:15,sp:1.7});
+   return l})(),
+ mallows:[
+  {t:'mallow',a:['#ffd0ea',true],x:50,y:60,w:20,r:-8,sp:.6},
+  {t:'mallow',a:['#fff',false],x:28,y:44,w:16,r:18,sp:1.1},
+  {t:'mallow',a:['#fff27a',true],x:72,y:42,w:16,r:-16,sp:1.0},
+  {t:'mallow',a:['#c8ff6a',true],x:14,y:72,w:12,r:28,sp:1.5},
+  {t:'mallow',a:['#a9f0ff',true],x:86,y:74,w:12,r:-30,sp:1.4},
+  {t:'mallow',a:['#fff',false],x:40,y:86,w:11,r:10,sp:1.9},
+  {t:'mallow',a:['#ffd0ea',false],x:66,y:20,w:10,r:24,sp:1.7},
+  {t:'wrap',a:[K.pink,K.yellow],x:10,y:20,w:15,r:-14,sp:1.2},
+  {t:'photo',src:'dentaduras.jpg',x:90,y:14,w:14,sp:2}
+ ]
+};
+const panels=$$('.panel').map(el=>{
+  const key=$('[data-panel]',el).dataset.panel, layer=$('[data-panel]',el);
+  const els=fill(layer,P[key].map(s=>({...s,d:s.sp})));
+  return {el,els};
+});
+
+/* ============ CENA 4 ============ */
+const s4c=$('#s4c');
+const s4cols=[K.pink,K.yellow,K.lime,K.orange,K.cyan,K.purple,'#fff',K.red];
+const s4Types=['worm','bear','mallow','tube','ring','wrap','photo'];
+const photos=['mix.jpg','amoras.jpg','tubos.jpg','coracoes.jpg','dentaduras.jpg'];
+const N=18;
+const s4List=[];
+for(let i=0;i<N;i++){
+  const a=(i/N)*Math.PI*2+rnd(-.12,.12), type=s4Types[i%s4Types.length], col=s4cols[i%s4cols.length];
+  const o={t:type,x:50,y:50,w:rnd(8,14),r:rnd(-40,40),ang:a,spin:rnd(-160,160),d:1};
+  if(type==='worm'){o.a=[col,dk(col),i%2];o.w=rnd(16,22)}
+  else if(type==='bear')o.a=[col];
+  else if(type==='mallow')o.a=[lt(col,.5),i%2==0];
+  else if(type==='tube')o.a=[col,s4cols[(i+3)%s4cols.length]];
+  else if(type==='ring')o.a=[col];
+  else if(type==='wrap'){o.a=[col,s4cols[(i+2)%s4cols.length]];o.w=rnd(11,15)}
+  else {o.src=photos[i%photos.length];o.w=rnd(10,14)}
+  s4List.push(o);
+}
+const s4El=fill(s4c,s4List);
+s4El.forEach((e,i)=>{e.style.zIndex=3; e.firstChild.style.willChange='transform';
+  const f=e.querySelector('.f'); f.style.animation='none'}); // movimento aqui é do scroll
+
+const s4Words=$$('#s4t .w'), final=$('#final'), flash=$('#flash'), bgf=$('#s4bgf'), rays4=$('#s4rays'), conf=$('#conf');
+const confCols=[K.pink,K.yellow,K.lime,K.cyan,'#fff',K.orange,K.purple];
+conf.innerHTML=Array.from({length:46},()=>`<i style="left:${rnd(0,100).toFixed(1)}%;--s:${rnd(.9,2).toFixed(2)}vmax;--c:${confCols[Math.floor(rnd(0,confCols.length))]};--t:${rnd(4,8).toFixed(1)}s;--d:${(-rnd(0,8)).toFixed(1)}s;--dx:${rnd(-12,12).toFixed(0)}vw"></i>`).join('');
+
+/* ondas de transição: gotas irregulares cobrindo toda a largura */
+$$('.drip path').forEach((p,k)=>{let d='M0 120V60',x=0,i=k*7+3;
+  while(x<1440){const w=90+((i*37)%70),h=8+((i*53)%52);d+='Q'+(x+w/2)+' '+(60-h*1.6)+' '+(x+w)+' '+(60+((i*29)%20)-10);x+=w;i++}
+  p.setAttribute('d',d+'V120z')});
+
+/* ============ LOOP ============ */
+let mx=0,my=0,tx=0,ty=0,vw=innerWidth,vh=innerHeight;
+addEventListener('resize',()=>{vw=innerWidth;vh=innerHeight});
+if(!RM)addEventListener('pointermove',e=>{tx=e.clientX/vw*2-1;ty=e.clientY/vh*2-1},{passive:true});
+const heroEl=$('#hero'),s2=$('#s2'),s4=$('#s4'),hl=$('.hl'),badge=$('.badge'),cue=$('.cue');
+const prog=el=>{const r=el.getBoundingClientRect();return clamp(-r.top/(r.height-vh))};
+
+function frame(){
+  mx=lerp(mx,tx,.06);my=lerp(my,ty,.06);
+
+  /* hero: parallax por camadas + zoom em direção à câmera ao rolar */
+  const hp=prog(heroEl);
+  heroEls.forEach(e=>{const d=e._d,
+    X=mx*d*-26, Y=my*d*-16-hp*d*vh*.42, S=1+hp*d*.85;
+    e._p.style.transform=`translate3d(${X}px,${Y}px,0) scale(${S})`});
+  hl.style.transform=`translateY(${-52-hp*30}%) scale(${1+hp*.12})`;
+  hl.style.opacity=clamp(1-(hp-.45)*2.4);
+  badge.style.opacity=clamp(1-hp*3);cue.style.opacity=clamp(1-hp*6);
+
+  /* cena 2 */
+  const p2=prog(s2);
+  const pos=p2*3;
+  s2Bgs.forEach((b,i)=>{b.style.opacity=i===0?1:clamp(1-Math.abs(pos-i))});
+  const lit=Math.floor(clamp((p2-.04)/.5)*4.999);
+  s2Words.forEach((w,i)=>w.classList.toggle('on',i<lit));
+  s2El.forEach(e=>{const s=e._s,u=clamp((p2-s.a0)/(s.b0-s.a0)),
+    x=s.dir>0?lerp(-24,124,u):lerp(124,-24,u);
+    e.style.top=s.y+'%';
+    e._p.style.transform=`translate3d(${x/100*vw}px,${Math.sin(u*Math.PI*2)*vh*.03}px,0) rotate(${u*200*s.dir}deg)`;
+    e.style.visibility=(u<=0||u>=1)?'hidden':'visible'});
+
+  /* cena 3 */
+  panels.forEach(({el,els})=>{
+    const r=el.getBoundingClientRect(), q=(vh-r.top)/(vh+r.height);
+    if(q>.1)el.classList.add('in');
+    if(q<=0)el.classList.remove('in');
+    const k=(.5-q);
+    els.forEach(e=>{const d=e._d; e._p.style.transform=`translate3d(0,${k*d*vh*.5}px,0) rotate(${k*d*14}deg)`});
+  });
+
+  /* cena 4 */
+  const p4=prog(s4);
+  const t1=ease(clamp(p4/.42)), t2=ease(clamp((p4-.6)/.12));
+  const R=Math.max(vw,vh);
+  s4El.forEach((e,i)=>{const s=e._s,a=s.ang,
+    sx=Math.cos(a)*R*.95, sy=Math.sin(a)*R*.95,         // longe, fora da tela
+    rx=Math.cos(a)*vw*.43, ry=Math.sin(a)*vh*.41,      // anel em volta do texto
+    ex=Math.cos(a)*vw*.5,  ey=Math.sin(a)*vh*.5;        // moldura final nas bordas
+    let X=lerp(sx,rx,t1), Y=lerp(sy,ry,t1);
+    X=lerp(X,ex,t2);Y=lerp(Y,ey,t2);
+    const sc=lerp(.35,1,t1)*lerp(1,1.45,t2), rot=s.r+s.spin*(1-t1)+t2*60;
+    e._p.style.transform=`translate3d(${X}px,${Y}px,0) rotate(${rot}deg) scale(${sc})`});
+  const lit4=Math.floor(clamp((p4-.1)/.36)*4.999);
+  s4Words.forEach((w,i)=>w.classList.toggle('on',i<lit4&&p4<.6));
+  $('#s4t').style.opacity=clamp(1-(p4-.56)/.05);
+  const fl=1-Math.abs(clamp((p4-.57)/.1)*2-1);        // pico do flash em ~.62
+  flash.style.opacity=(p4>.57&&p4<.67)?fl*.95:0;
+  bgf.style.opacity=clamp((p4-.6)/.1);
+  rays4.style.opacity=clamp((p4-.62)/.1)*.9;
+  const showFinal=p4>.63;
+  final.classList.toggle('show',showFinal);
+  conf.classList.toggle('show',showFinal);
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

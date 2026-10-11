@@ -1,0 +1,9 @@
+FINI - Candy World (conceito para Reel)
+Abra o index.html no Chrome, tela cheia 1440x900, e role devagar de cima para baixo.
+
+- Conceito independente, só local. NÃO publicar na Vercel/domínio. Não é site oficial da Fini.
+- Os doces (minhocas, ursos, marshmallows, tubos, argolas, balas) são desenhados em código (SVG).
+- Fotos em assets/ e logo.jpg vêm da pasta Imagens/Logo (capturas de terceiros). Usar logo/fotos da marca fora do Reel exige autorização.
+- Logo tem só 150px: aparece pequena de propósito. Se tiver arquivo em alta, trocar assets/logo.jpg.
+- Fontes (Bagel Fat One e Fredoka) vêm do Google Fonts; sem internet cai em Arial Black.
+- Cena 2 (título) e cena 4 (texto, explosão e final) acendem pela rolagem: role sem pressa.
